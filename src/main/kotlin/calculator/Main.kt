@@ -1,31 +1,39 @@
-package calculator
+import java.lang.Exception
+
+fun calculate(input: String){
+    val fixedInput = input.replace("(--)+".toRegex(), "+")
+        .replace("((-[+])|([+]-))".toRegex(), "-")
+        .replace("[+]+".toRegex(), "+")
+        .replace("[+]\\s*".toRegex(), "+")
+        .replace("[-]\\s*".toRegex(), "-")
+        .split(' ')
+    try {
+        println(fixedInput.sumOf { it.toInt() })
+    } catch (e: Exception) {
+        println("Invalid input")
+    }
+}
 
 
 fun main() {
-    while (true) {
-        val input = readln()
-        var rValue = 0
-        val valueList = mutableListOf<Int>()
+    while(true) {
+        val input = readLine()!!
+        if (input.isEmpty())
+            continue
 
-        if (input == ("/exit")) {
-            println("Bye!")
-            break
-        } else if (input == "/help") {
-            println("The program calculates the sum of numbers")
-            continue
+        when(input[0]){
+            '/' -> when(input){
+                "/exit" -> {
+                    println("Bye!")
+                    break
+                }
+                "/help" -> println("Simple calculator")
+                else ->  println("Unknown command")
+            }
+            '+' -> calculate(input)
+            '-' -> calculate(input)
+            in '0'..'9' -> calculate(input)
+            else -> println("Invalid input")
         }
-        else if (input.isEmpty()) {
-            continue
-        } else if (input.split(" ").size == 1) {
-            println(input.toInt())
-            continue
-        } else {
-            input.split(" ").map { valueList.add(it.toInt()) }
-        }
-        for (i in valueList) {
-            rValue += i
-        }
-        println(rValue)
-
     }
 }
